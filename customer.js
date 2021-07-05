@@ -6,3 +6,4 @@
     document.getElementById("qPos").innerHTML = "You are the " + posInQ + "th person in line";
 
 }
+

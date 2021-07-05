@@ -47,7 +47,7 @@ nav{
 }
 @font-face {
     font-family: "custom";
-    src: url("customFont.ttf");
+    src: url("fonts/customFont.ttf");
 }
 
 .text-box {
