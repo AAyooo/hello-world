@@ -5,7 +5,7 @@ var navLinks = document.getElementById("navLinks");//header menu links
 
 //TODO: change for particular restaurant later
 let line = new Queue(); //the restaurant queue 
-var count = 0;//the restaurant queue size
+var count = 1;//the restaurant queue size
 
 
 /**
@@ -39,4 +39,14 @@ function showMenu() {
 }
 function hideMenu() {
     navLinks.style.right = "-200px";
+}
+
+/*login*/
+var modal = document.getElementById('id01');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
 }

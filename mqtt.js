@@ -32,7 +32,7 @@ function onMessageArrived(msg) {
     //Called each time a message is received
     console.log('Received message:', msg.destinationName, msg.payloadString);
     if(msg.destinationName == "cutsies/restaurant1"){
-     document.getElementById("waitingTime").innerHTML = "Estimated wait time: " + msg.payloadString;
+     document.getElementById("waitingTime").innerHTML = msg.payloadString;
     }
 }
 

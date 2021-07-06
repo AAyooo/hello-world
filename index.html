@@ -41,12 +41,36 @@
         Get in line at your favorite restaurant!
       </p>
       <button href="page2.html" class="hero-btn" onclick="addCust()">Join The Line!</button>
-      <div id="qPos">
-
-      </div>
-      <div id="waitingTime">
-
-      </div>
+      <div id="qPos"></div>
+      <div style="display:inline-block">Estimated Waiting Time: </div>
+      <div id="waitingTime" style="display:inline-block"></div>
+    </div>
+    <div id="id01" class="modal">
+  
+      <form class="modal-content animate" action="/action_page.php" method="post">
+        <div class="imgcontainer">
+          <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+          <img src="image/avatar.png" alt="Avatar" class="avatar">
+        </div>
+    
+        <div class="container">
+          <label for="uname"><b>Username</b></label>
+          <input type="text" placeholder="Enter Username" name="uname" required>
+    
+          <label for="psw"><b>Password</b></label>
+          <input type="password" placeholder="Enter Password" name="psw" required>
+            
+          <button type="submit">Login</button>
+          <label>
+            <input type="checkbox" checked="checked" name="remember"> Remember me
+          </label>
+        </div>
+    
+        <div class="container" style="background-color:#f1f1f1">
+          <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+          <span class="psw">Forgot <a href="#">password?</a></span>
+        </div>
+      </form>
     </div>
 
   </section>
@@ -129,12 +153,12 @@
         <p>Lorem ipsum dolor.</p>
       </div>
       <div class="vip-col">
-        <img src="images/rest2.png" style="width:400px">
+        <img src="images/rest2.png" >
         <h3>Thai Food</h3>
         <p>Lorem ipsum dolor.</p>
       </div>
       <div class="vip-col">
-        <img src="images/rest3.jpg" style="width:400px">
+        <img src="images/rest3.jpg" >
         <h3>Viet Food</h3>
         <p>Lorem ipsum dolor.</p>
       </div>

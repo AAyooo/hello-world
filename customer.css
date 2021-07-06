@@ -80,3 +80,21 @@
     text-align:center;
     padding-top:100px;
 }
+.vip-col{
+    flex-basis:31%;
+    border-radius:10px;
+    margin-bottom: 5%;
+    text-align: left;
+}
+.vip-col img{
+    width:100%;
+    border-radius: 10px;
+}
+.vip-col p{
+    padding:0;
+}
+.vip-col h3{
+    margin-top: 16px;
+    margin-bottom: 15px;
+    text-align: left;
+}
