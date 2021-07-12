@@ -76,7 +76,17 @@ firebaseAuth.onAuthStateChanged(user => {
 
                     console.log("size:" + size);
                     document.getElementById('qPos').style.display = "block";
+                    if(size == 1){
+                    document.getElementById('qPos').innerHTML = "You are the " + size + "st position in line";
+                    }
+                    else if(size == 2){
+                    document.getElementById('qPos').innerHTML = "You are the " + size + "nd position in line";
+                    }
+                    else if(size == 3){
+                    document.getElementById('qPos').innerHTML = "You are the " + size + "rd position in line";
+                    }else {
                     document.getElementById('qPos').innerHTML = "You are the " + size + "th position in line";
+                    }
                 });
             }).catch((error) => {
                 console.log(error);

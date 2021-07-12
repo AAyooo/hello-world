@@ -65,6 +65,7 @@
       <div style="display:inline-block">Estimated Waiting Time: </div>
       <div id="waitingTime" style="display:inline-block"></div>
       <div id="seated" style="display:none">Your spot is ready!</div>
+      <button class="hero-btn" onclick="document.getElementById('seated').style.display='none'">Got It</button>
     </div>
     <div id="id01" class="modal">
 
@@ -78,15 +79,8 @@
           <label for="uname" style="display:block"><b>Name</b></label>
           <input type="text" placeholder="Enter Name" name="uname" required id="username">
 
-          <label for="partySize" style="display:block">Choose A Party Size:</label>
-          <select name="partySize" id="partySize">
-            <option value="2">0</option>
-            <option value="2">2</option>
-            <option value="4">4</option>
-            <option value="6">6</option>
-            <option value="8">8</option>
-            <option value="8">8+</option>
-          </select>
+          <label for="partySize" style="display:block"><b>Party Size:</b></label>
+          <input type="number" placeholder="Enter Party Size" name="partySize">
 
           <button type="submit" id="JoinLineButton" class="sign-btn">Join</button>
         </div>

@@ -1,7 +1,7 @@
 var mqtt;
 var reconnectTimeout = 2000;
-var host = "broker.mqttdashboard.com";
-var port = 8000;
+var host = "test.mosquitto.org";
+var port = 8081;
 
 function MQTTconnect(){
     console.log("connecting to " + host + " " + port);
@@ -9,7 +9,8 @@ function MQTTconnect(){
     var options = {
         timeout:3, 
         onSuccess: onConnect,
-        onFailure: onFailure
+        onFailure: onFailure,
+        useSSL: true
     };
     mqtt.onMessageArrived = onMessageArrived;
     mqtt.connect(options);
