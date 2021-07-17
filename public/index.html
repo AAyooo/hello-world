@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="margin: 0; padding: 0;">
 
 <head>
   <meta charset="utr-8">
@@ -22,7 +22,7 @@
 
 </head>
 
-<body>
+<body style="margin: 0; padding: 0;">
   <section class="header">
     <nav>
       <h1 style="color:#ffff; font-size:300%; max-width:100%;"><img src="images/name.png" alt="Cutsies Logo"
@@ -37,36 +37,56 @@
       </div>
       <div id="whenSignedOut">
 
-        <button id="signInBtn" class="sign-btn">Sign in with Google</button>
-    
+        <button id="signInBtn" class="sign-btn">Restaurant Login</button>
+        <button onclick="customerLogin()" class="sign-btn">Customer Login</button>
+
       </div>
-    
+
       <div id="whenSignedIn" hidden="true">
-    
+
         <div id="userDetails"></div>
-    
+
         <button id="signOutBtn" class="sign-btn">Sign Out</button>
-    
+
       </div>
       <i class="fas fa-bars" onclick="showMenu()"></i>
     </nav>
 
     <div class="text-box" id="restaurantBox">
-      <button class="sign-btn"
-      onclick="removeCust();">Seat first person</button>
+      <button class="sign-btn" onclick="removeCust(); ">Seat first person</button>
+      <div id="numPpl"></div>
     </div>
+
     <div class="text-box" id="customerBox">
-      <p>
+      <p style="font-weight:bold">
         Get in line at your favorite restaurant!
       </p>
-      <button class="hero-btn" onclick="document.getElementById('id01').style.display='block'">Join The Line!</button>
-      <div id="qPos"></div>
+      <button class="hero-btn" onclick="document.getElementById('id01').style.display='block'">Join The
+          Line!</button>
+      <div id="alrLine" class="blinking" style="display:inline; color:rgb(255, 129, 56); font-weight: bold;">You are already in line! </div>
 
-      <div style="display:inline-block">Estimated Waiting Time: </div>
-      <div id="waitingTime" style="display:inline-block"></div>
-      <div id="seated" style="display:none">Your spot is ready!</div>
-      <button class="hero-btn" onclick="document.getElementById('seated').style.display='none'">Got It</button>
+      <div id="seated" class="blinking" style=" color:rgb(255, 129, 56); font-weight: bold;">Your spot is ready!
+        <button class="sign-btn" onclick="document.getElementById('seated').style.display='none'">Got It</button>
+      </div>
+
+      <div style="  display: grid;
+       grid-template-columns: 220px 100px;
+        grid-gap: 10px;">
+        <div style="display:inline-block">Your position in line: </div>
+        <div id="qPos" style="display:inline-block;font-weight:bold;font-size:large;"></div>
+      </div>
+
+      <div style="  display: grid;
+       grid-template-columns: 220px 100px;
+        grid-gap: 10px;">
+        <div style="display:inline-block">Estimated Waiting Time: </div>
+        <div id="waitingTime" style="display:inline-block;font-weight:bold;font-size:large;"></div>
+      </div>
+
+
+
     </div>
+
     <div id="id01" class="modal">
 
       <form class="modal-content animate" action="/action_page.php" method="post">
@@ -79,14 +99,44 @@
           <label for="uname" style="display:block"><b>Name</b></label>
           <input type="text" placeholder="Enter Name" name="uname" required id="username">
 
-          <label for="partySize" style="display:block"><b>Party Size:</b></label>
-          <input type="number" placeholder="Enter Party Size" name="partySize">
+          <label for="partySize" style="display:block"><b>Party Size</b></label>
+          <input type="number" placeholder="Enter Party Size" name="partySize" min="-1" max="0" required id="partySize">
 
-          <button type="submit" id="JoinLineButton" class="sign-btn">Join</button>
+          <label for="phoneNum" style="display:block"><b>Phone Number</b></label>
+          <input type="tel" placeholder="Enter Your Phone Number" name="phoneNum"  required id="phoneNum">
+
+
+          <input type="submit" id="JoinLineButton" class="sign-btn"></input>
+
+          <div id="requiredFill" class="requiredFill">*Please fill out all the fields above!*</div>
         </div>
       </form>
     </div>
 
+
+    <!--restaurant modal-->
+    <div id="id02" class="modal2">
+
+      <form class="modal2-content animate" action="/action_page.php" method="post">
+        <div class="imgcontainer">
+          <span onclick="document.getElementById('id02').style.display='none'" class="close"
+            title="Close Modal">&times;</span>
+        </div>
+
+        <div class="container" id="restaurantModalContainer">
+          <label for="uname" style="display:block"><b>Name</b></label>
+          <div id="customerName"></div>
+
+          <label for="partySize" style="display:block"><b>Party Size</b></label>
+          <div id="customerParty"></div>
+
+          <label for="phoneNum" style="display:block"><b>Phone Number</b></label>
+          <div id="customerPhone"></div>
+        </div>
+
+        <div id="emptyLine"><b>The line is empty!</b></div>
+      </form>
+    </div>
   </section>
 
   <!-----discover----->

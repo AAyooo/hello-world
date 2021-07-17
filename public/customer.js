@@ -1,5 +1,6 @@
 /**Global Variables */
 
+
 const whenSignedIn = document.getElementById('whenSignedIn');
 const whenSignedOut = document.getElementById('whenSignedOut');
 
@@ -10,6 +11,10 @@ const userDetails = document.getElementById('userDetails');
 
 const joinLineButton = document.getElementById('JoinLineButton');
 const removeThing = document.getElementById('removeThing');
+var username = document.getElementById("username").value;
+var party = document.getElementById("partySize").value;
+var phoneNum = document.getElementById("phoneNum").value;
+var randomTime;
 
 /// Sign in event handlers
 
@@ -21,24 +26,24 @@ firebaseAuth.onAuthStateChanged(user => {
     if (user) {
         // signed in
         var query = restaurantCollection.where("EUID", "==", user.uid);
-        query.get().then((querySnapshot) =>  {
+        query.get().then((querySnapshot) => {
             restFlag = false;
-            querySnapshot.forEach((doc)=>{
-                console.log("EUID","=>", doc.data());
+            querySnapshot.forEach((doc) => {
+                console.log("EUID", "=>", doc.data());
                 restFlag = true;
             });
             whenSignedIn.hidden = false;
             whenSignedOut.hidden = true;
             userDetails.innerHTML = `<h3 style="color:#ffff">Hello ${user.displayName}!</h3>`;
-            if(restFlag){
+            if (restFlag) {
                 document.getElementById("restaurantBox").style.display = "block";
                 document.getElementById("customerBox").style.display = "none";
-            }else {
-                document.getElementById("restaurantBox").style.display = "none";
-                document.getElementById("customerBox").style.display = "block";
+                document.getElementById("alrLine").style.display = "none";
+                document.getElementById('seated').style.display = "none";
+                document.getElementById("id02").style.display = "none";
             }
+        })
 
-        });
     } else {
         // not signed in
         whenSignedIn.hidden = true;
@@ -49,73 +54,120 @@ firebaseAuth.onAuthStateChanged(user => {
     }
 });
 
-
+function customerLogin() {
+    document.getElementById("restaurantBox").style.display = "none";
+    document.getElementById("customerBox").style.display = "block";
+    document.getElementById('alrLine').style.display = 'none';
+    document.getElementById('seated').style.display = "none";
+    document.getElementById('requiredFill').style.display = "none";
+    mqtt.subscribe("cutises/restaurant1");
+    mqtt.subscribe("cutises/restaurant1/waitingtime");
+}
+function posReport(size) {
+    if (size == 0) {
+        document.getElementById('qPos').style.display = "none";
+        document.getElementById('waitingTime').style.display = "none";
+        return;
+    }
+    document.getElementById('qPos').style.display = "block";
+    if (size == 1) {
+        document.getElementById('qPos').innerHTML =  size + "st";
+    }
+    else if (size == 2) {
+        document.getElementById('qPos').innerHTML =  size + "nd";
+    }
+    else if (size == 3) {
+        document.getElementById('qPos').innerHTML =  size + "rd";
+    } else {
+        document.getElementById('qPos').innerHTML =  size + "th";
+    }
+}
 let unsubscribe;
 
-firebaseAuth.onAuthStateChanged(user => {
+//firebaseAuth.onAuthStateChanged(user => {
 
-    if (user) {
+//if (user) {
 
-        // Database Reference    
-        joinLineButton.onclick = () => {
-            const { serverTimestamp } = firebase.firestore.FieldValue;
-            var query = waitlistCollection.orderBy("createdAt").limit(100);
+// Database Reference    
+joinLineButton.onclick = () => {
 
+    const { serverTimestamp } = firebase.firestore.FieldValue;
+    var query = waitlistCollection.orderBy("createdAt").limit(100);
+
+    username = document.getElementById("username").value;
+    party = document.getElementById("partySize").value;
+    phoneNum = document.getElementById("phoneNum").value;
+
+    if(username == "" || party == "" || phoneNum == ""){
+        document.getElementById('requiredFill').style.display = 'block';
+        setTimeout(function() {
+            document.getElementById('requiredFill').style.display = 'none';
+          }, 2500);
+    }else{
+
+    var size = 1;
+    var inLine = -1;
+
+    query.get().then(querySnapshot => {
+        console.log("querySnapshot");
+        querySnapshot.forEach((doc) => {
+            if (doc.get('name') == username && doc.get('phoneNumber') == phoneNum) {
+                if (inLine == -1) { inLine = size; }
+            }
+            size++;
+        });
+
+        if (inLine == -1) {
             waitlistCollection.add({
-                uid: user.uid,
-                name: document.getElementById("username").value,
-                partySize: document.getElementById("partySize").value,
-                createdAt: serverTimestamp()
+                //uid: user.uid,
+                name: username,
+                partySize: party,
+                createdAt: serverTimestamp(),
+                phoneNumber: phoneNum
             }).then(() => {
                 console.log("added");
-                var size = 0;
-                query.get().then((querySnapshot) =>  {
-                    querySnapshot.forEach((doc)=>{
-                       size++;
-                    });
-
-                    console.log("size:" + size);
-                    document.getElementById('qPos').style.display = "block";
-                    if(size == 1){
-                    document.getElementById('qPos').innerHTML = "You are the " + size + "st position in line";
-                    }
-                    else if(size == 2){
-                    document.getElementById('qPos').innerHTML = "You are the " + size + "nd position in line";
-                    }
-                    else if(size == 3){
-                    document.getElementById('qPos').innerHTML = "You are the " + size + "rd position in line";
-                    }else {
-                    document.getElementById('qPos').innerHTML = "You are the " + size + "th position in line";
-                    }
-                });
-            }).catch((error) => {
-                console.log(error);
+                posReport(size);
+                document.getElementById('id01').style.display = 'none';
+                randomTime = Math.floor(Math.random() * (5) + 15);
+                document.getElementById('waitingTime').innerHTML = randomTime + " minutes";
             });
+        } else {
+            document.getElementById('id01').style.display = 'none';
+            document.getElementById('alrLine').style.display = 'inline';
+            posReport(inLine);
+            setTimeout(function() {
+                document.getElementById('alrLine').style.display = 'none';
+              }, 5000);
         }
+    }).catch((error) => {
+        console.log(error);
+    });
+    }
+}
 
 
         // Query
-        unsubscribe = waitlistCollection
-            .where('uid', '==', user.uid)
-            .orderBy('createdAt') // Requires a query
-            .onSnapshot(querySnapshot => {
-                
-                // Map results to an array of li elements
+/*unsubscribe = waitlistCollection
+    .where('uid', '==', user.uid)
+    .orderBy('createdAt') // Requires a query
+    .onSnapshot(querySnapshot => {
 
-                const items = querySnapshot.docs.map(doc => {
+        // Map results to an array of li elements
 
-                    return `<li>${doc.data().name}</li>`
+        const items = querySnapshot.docs.map(doc => {
 
-                });
+            return `<li>${doc.data().name}</li>`
 
-                //thingsList.innerHTML = items.join('');
+        });
 
-            });
+        //thingsList.innerHTML = items.join('');
+
+    });
+*/
 
 
-
-    } else {
+    //} else {
         // Unsubscribe when the user signs out
-        unsubscribe && unsubscribe();
-    }
-});
+        //unsubscribe && unsubscribe();
+   //}
+//});
