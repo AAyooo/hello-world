@@ -89,7 +89,7 @@
 
     <div id="id01" class="modal">
 
-      <form class="modal-content animate" action="/action_page.php" method="post">
+      <form class="modal-content animate" onsubmit="event.preventDefault(); return(joinLine())">
         <div class="imgcontainer">
           <span onclick="document.getElementById('id01').style.display='none'" class="close"
             title="Close Modal">&times;</span>
@@ -100,15 +100,14 @@
           <input type="text" placeholder="Enter Name" name="uname" required id="username">
 
           <label for="partySize" style="display:block"><b>Party Size</b></label>
-          <input type="number" placeholder="Enter Party Size" name="partySize" min="-1" max="0" required id="partySize">
+          <input type="number" placeholder="Enter Party Size" name="partySize" min="1" max="20" step="1" required id="partySize">
 
           <label for="phoneNum" style="display:block"><b>Phone Number</b></label>
           <input type="tel" placeholder="Enter Your Phone Number" name="phoneNum"  required id="phoneNum">
 
 
-          <input type="submit" id="JoinLineButton" class="sign-btn"></input>
+          <input type="submit" class="sign-btn"></input>
 
-          <div id="requiredFill" class="requiredFill">*Please fill out all the fields above!*</div>
         </div>
       </form>
     </div>

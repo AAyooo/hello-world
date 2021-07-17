@@ -83,8 +83,9 @@ function onMessageArrived(msg) {
             if(randomTime > 2){
                 randomTime-=2;
             }
-            document.getElementById('waitingTime').style.display = "block";
-            document.getElementById('waitingTime').innerHTML = randomTime + " minutes";
+            displayWaitingTime(randomTime);
+
+
             var position = 1;
             var query = waitlistCollection.orderBy("createdAt").limit(100);
             query.get().then((querySnapshot) =>  {

@@ -9,7 +9,6 @@ const signOutBtn = document.getElementById('signOutBtn');
 
 const userDetails = document.getElementById('userDetails');
 
-const joinLineButton = document.getElementById('JoinLineButton');
 const removeThing = document.getElementById('removeThing');
 var username = document.getElementById("username").value;
 var party = document.getElementById("partySize").value;
@@ -59,7 +58,6 @@ function customerLogin() {
     document.getElementById("customerBox").style.display = "block";
     document.getElementById('alrLine').style.display = 'none';
     document.getElementById('seated').style.display = "none";
-    document.getElementById('requiredFill').style.display = "none";
     mqtt.subscribe("cutises/restaurant1");
     mqtt.subscribe("cutises/restaurant1/waitingtime");
 }
@@ -70,17 +68,22 @@ function posReport(size) {
         return;
     }
     document.getElementById('qPos').style.display = "block";
+    document.getElementById('qPos').className= "blinking";
     if (size == 1) {
-        document.getElementById('qPos').innerHTML =  size + "st";
+        document.getElementById('qPos').innerHTML = size + "st";
     }
     else if (size == 2) {
-        document.getElementById('qPos').innerHTML =  size + "nd";
+        document.getElementById('qPos').innerHTML = size + "nd";
     }
     else if (size == 3) {
-        document.getElementById('qPos').innerHTML =  size + "rd";
+        document.getElementById('qPos').innerHTML = size + "rd";
     } else {
-        document.getElementById('qPos').innerHTML =  size + "th";
+        document.getElementById('qPos').innerHTML = size + "th";
     }
+
+    setTimeout(function() {
+        document.getElementById('qPos').className= "";
+      }, 5000);
 }
 let unsubscribe;
 
@@ -89,7 +92,7 @@ let unsubscribe;
 //if (user) {
 
 // Database Reference    
-joinLineButton.onclick = () => {
+function joinLine() {
 
     const { serverTimestamp } = firebase.firestore.FieldValue;
     var query = waitlistCollection.orderBy("createdAt").limit(100);
@@ -98,54 +101,62 @@ joinLineButton.onclick = () => {
     party = document.getElementById("partySize").value;
     phoneNum = document.getElementById("phoneNum").value;
 
-    if(username == "" || party == "" || phoneNum == ""){
-        document.getElementById('requiredFill').style.display = 'block';
-        setTimeout(function() {
-            document.getElementById('requiredFill').style.display = 'none';
-          }, 2500);
-    }else{
+    if (username == "" || party == "" || phoneNum == "") {
+        return false;
+    } else {
 
-    var size = 1;
-    var inLine = -1;
+        var size = 1;
+        var inLine = -1;
 
-    query.get().then(querySnapshot => {
-        console.log("querySnapshot");
-        querySnapshot.forEach((doc) => {
-            if (doc.get('name') == username && doc.get('phoneNumber') == phoneNum) {
-                if (inLine == -1) { inLine = size; }
-            }
-            size++;
-        });
-
-        if (inLine == -1) {
-            waitlistCollection.add({
-                //uid: user.uid,
-                name: username,
-                partySize: party,
-                createdAt: serverTimestamp(),
-                phoneNumber: phoneNum
-            }).then(() => {
-                console.log("added");
-                posReport(size);
-                document.getElementById('id01').style.display = 'none';
-                randomTime = Math.floor(Math.random() * (2) + 1);
-                randomTime+= size * 2;
-                document.getElementById('waitingTime').innerHTML = randomTime + " minutes";
+        query.get().then(querySnapshot => {
+            querySnapshot.forEach((doc) => {
+                if (doc.get('name') == username && doc.get('phoneNumber') == phoneNum) {
+                    if (inLine == -1) { inLine = size; }
+                }
+                size++;
             });
-        } else {
-            document.getElementById('id01').style.display = 'none';
-            document.getElementById('alrLine').style.display = 'inline';
-            posReport(inLine);
-            setTimeout(function() {
-                document.getElementById('alrLine').style.display = 'none';
-              }, 5000);
-        }
-    }).catch((error) => {
-        console.log(error);
-    });
+
+            if (inLine == -1) {
+                waitlistCollection.add({
+                    //uid: user.uid,
+                    name: username,
+                    partySize: party,
+                    createdAt: serverTimestamp(),
+                    phoneNumber: phoneNum
+                }).then(() => {
+                    console.log("added");
+                    posReport(size);
+                    document.getElementById('id01').style.display = 'none';
+
+                    randomTime = Math.floor(Math.random() * (2) + 1) + size *2;
+                    displayWaitingTime(randomTime);
+                });
+            } else {
+                document.getElementById('id01').style.display = 'none';
+                document.getElementById('alrLine').style.display = 'inline';
+                posReport(inLine);
+                setTimeout(function () {
+                    document.getElementById('alrLine').style.display = 'none';
+                }, 5000);
+
+                randomTime = Math.floor(Math.random() * (2) + 1) + size *2;
+                displayWaitingTime(randomTime);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
     }
 }
 
+// Database Reference    
+function displayWaitingTime(randomTime) {
+    document.getElementById('waitingTime').innerHTML = randomTime + " minutes";
+    document.getElementById('waitingTime').style.display = 'inline';
+    document.getElementById('waitingTime').className= "blinking";
+    setTimeout(function() {
+        document.getElementById('waitingTime').className= "";
+        }, 5000);
+}
 
         // Query
 /*unsubscribe = waitlistCollection
