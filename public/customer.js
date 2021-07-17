@@ -128,7 +128,8 @@ joinLineButton.onclick = () => {
                 console.log("added");
                 posReport(size);
                 document.getElementById('id01').style.display = 'none';
-                randomTime = Math.floor(Math.random() * (5) + 15);
+                randomTime = Math.floor(Math.random() * (2) + 1);
+                randomTime+= size * 2;
                 document.getElementById('waitingTime').innerHTML = randomTime + " minutes";
             });
         } else {

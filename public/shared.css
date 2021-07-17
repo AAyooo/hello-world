@@ -146,11 +146,11 @@ nav .far{
     */
     .modal{
         --modal-width:60%;
-        --modal-height:60%;
+        --modal-height:40%;
     }
     .modal2{
         --modal-width:60%;
-        --modal-height:60%;
+        --modal-height:40%;
     }
 }
 
@@ -203,7 +203,6 @@ h3{
     margin: auto;
     padding: 1px;
     border-radius: 8px;
-    height: var(--modal-height);
   }
   
   /* The Close Button */
