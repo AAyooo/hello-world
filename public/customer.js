@@ -139,7 +139,7 @@ function joinLine() {
                     document.getElementById('alrLine').style.display = 'none';
                 }, 5000);
 
-                randomTime = Math.floor(Math.random() * (2) + 1) + size *2;
+                randomTime = Math.floor(Math.random() * (2) + 1) + inLine *2;
                 displayWaitingTime(randomTime);
             }
         }).catch((error) => {

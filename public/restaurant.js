@@ -1,5 +1,4 @@
 var customer;
-
 function removeCust() {
     var query = waitlistCollection.orderBy("createdAt").limit(1);
     var emptyQ = true;
@@ -10,9 +9,12 @@ function removeCust() {
             customer = doc.data();
             docId = doc.id;
             emptyQ = false;
+            
         });
         if (emptyQ == false) {
             waitlistCollection.doc(docId).delete().then(() => {
+                var d = new Date().getTime();
+                d/=1000;
                 console.log("Document successfully deleted! " + docId);
                 document.getElementById('customerName').innerHTML = customer.name;
                 document.getElementById('customerParty').innerHTML = customer.partySize;
@@ -20,7 +22,8 @@ function removeCust() {
                 document.getElementById('id02').style.display = 'block';
                 document.getElementById('emptyLine').style.display = 'none';
                 document.getElementById('restaurantModalContainer').style.display = 'block';
-
+                document.getElementById('waitTime').innerHTML = toMinutes(d - customer.createdAt.seconds);
+                
                 console.log("MQTT connected: " + mqtt.isConnected());
                 notifyCustomer();
 
@@ -46,3 +49,15 @@ function notifyCustomer() {
 
     
 };
+
+function toMinutes(seconds){
+    seconds/=60;
+    seconds = Math.floor(seconds);
+    seconds++;
+    var ans = seconds;
+    if(seconds == 1)
+        ans +="  minute";
+    else 
+        ans += "  minutes";
+    return ans;
+}
