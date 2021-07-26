@@ -99,8 +99,8 @@ nav .far{
 }
 
 :root {
-    --modal-width: 40%;
-    --modal-height:40%;
+    --modal-width: 50%;
+    --modal-height: 60%;
   }
 
 @media(max-width:600px){
@@ -145,8 +145,8 @@ nav .far{
     }
     */
     .modal{
-        --modal-width:60%;
-        --modal-height:40%;
+        --modal-width:70%;
+        --modal-height:60%;
     }
     .modal2{
         --modal-width:60%;
@@ -184,7 +184,7 @@ h3{
     display: none;
     position: fixed;
     z-index: 1;
-    left: 30%;
+    left: 20%;
     top: 20%;
     width: var(--modal-width);
     height: var(--modal-height);
@@ -203,6 +203,7 @@ h3{
     margin: auto;
     padding: 1px;
     border-radius: 8px;
+    height:90%;
   }
   
   /* The Close Button */
@@ -250,7 +251,7 @@ h3{
   }
 
   .sign-btn{
-    display:inline-block;
+    display:block;
     text-decoration: none;
     color:#ffff;
     border:1px solid #ff9900b9;
@@ -309,8 +310,9 @@ h3{
     height:80%;
   }
 
-  .requiredFill{
-      font-weight:bold;
-      color:rgb(255, 0, 0);
-      font-size: small;
-  }
+  .heighttext{
+    display:inline-block;
+    padding:5px 2px;
+    line-height:100%;
+}
+

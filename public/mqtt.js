@@ -3,11 +3,11 @@ var reconnectTimeout = 2000;
 var host = "test.mosquitto.org";
 var port = 8081;
 
-function MQTTconnect(){
+function MQTTconnect() {
     console.log("connecting to " + host + " " + port);
     mqtt = new Paho.MQTT.Client(host, port, 'clientId-' + randomString(10));
     var options = {
-        timeout:3, 
+        timeout: 3,
         onSuccess: onConnect,
         onFailure: onFailure,
         useSSL: true,
@@ -35,9 +35,10 @@ function doConnect() {
     );
 }
 */
-function onConnect(){
+function onConnect() {
     console.log('Connected');
-    mqtt.subscribe("cutsies/restaurant1");
+    mqtt.subscribe(topic);
+    console.log(topic);
 
     //var message = new Paho.MQTT.Message("hello World");
     //message.destinationName = 'cutsies/restaurant1';
@@ -49,7 +50,7 @@ function onConnectionLost(resObj) {
     console.log("re-connecting to " + host + " " + port);
 
     var options = {
-        timeout:3, 
+        timeout: 3,
         onSuccess: onConnect,
         onFailure: onFailure,
         useSSL: true,
@@ -63,7 +64,7 @@ function onConnectionLost(resObj) {
     }*/
 }
 
-function onFailure(){
+function onFailure() {
     console.log("Connection Attempt to Host" + host + "Failed");
     setTimeout(MQTTconnect, reconnectTimeout);
 
@@ -71,34 +72,59 @@ function onFailure(){
 function onMessageArrived(msg) {
     //Called each time a message is received
     console.log('Received message:', msg.destinationName, msg.payloadString);
-    if(msg.destinationName == "cutsies/restaurant1"){
+    if (msg.destinationName == topic) {
+
         let parsed = msg.payloadString.split(",");
-        if(parsed[0] == username && parsed[2] == phoneNum){
-            document.getElementById('seated').style.display = 'inline';
-            posReport(0);
-            setTimeout(function() {
-                document.getElementById('seated').style.display = 'none';
-              }, 20000);
-        }else{
-            if(randomTime > 2){
-                randomTime-=2;
+        if (parsed[0] == "add") {
+            if(restFlag){
+            peopleInLine();
+            updateQueue();
             }
-            displayWaitingTime(randomTime);
+        } else if (parsed[0] == "delete") {
+            if (restFlag) {
+                updateQueue();
+            } else {
+                if (parsed[1] == username && parsed[3] == phoneNum) {
+                    document.getElementById('seated').style.display = 'inline';
+                    posReport(0);
+                    setTimeout(function () {
+                        document.getElementById('seated').style.display = 'none';
+                    }, 20000);
+                } else {
+                    if (randomTime > 2) {
+                        randomTime -= 2;
+                    }
+                    displayWaitingTime(randomTime);
 
 
-            var position = 1;
+                    var position = 1;
+                    var query = waitlistCollection.orderBy("createdAt").limit(100);
+                    query.get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            console.log("EUID", "=>", doc.data());
+                            if (doc.get('name') == username && doc.get('phoneNumber') == phoneNum) {
+                                posReport(position);
+                            } else {
+                                position++;
+                            }
+                        });
+                    });
+                }
+            }
+
+        }else if(parsed[0] == "alert"){
             var query = waitlistCollection.orderBy("createdAt").limit(100);
-            query.get().then((querySnapshot) =>  {
-                querySnapshot.forEach((doc)=>{
-                    console.log("EUID","=>", doc.data());
+            query.get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    console.log("EUID", "=>", doc.data());
                     if (doc.get('name') == username && doc.get('phoneNumber') == phoneNum) {
-                        posReport(position);
-                    }else{
-                        position++;
+                        alert("Your almost at the front of the line!");
                     }
                 });
             });
+
         }
+
     }
 
 }

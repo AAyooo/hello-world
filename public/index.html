@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="customer.css">
   <link rel="stylesheet" href="shared.css">
+  <link rel="stylesheet" href="restaurant.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;800;900&display=swap"
@@ -54,16 +55,35 @@
 
     <div class="text-box" id="restaurantBox">
       <button class="sign-btn" onclick="removeCust(); ">Seat first person</button>
-      <div id="numPpl"></div>
+
+      <div style="  display: grid;
+      grid-template-columns: 270px 100px;
+       grid-gap: 10px;">
+        <div style="display:inline-block">Number of people in line: </div>
+        <div id="numPpl" style="display:inline-block;font-weight:bold;font-size:large;"></div>
+      </div>
+ 
+      <table style="width:85%" id="customerQueue">
+
+      </table>
+  
+      
+
     </div>
 
-    <div class="text-box" id="customerBox">
-      <p style="font-weight:bold">
+    <div class="text-box" id="customerBox" style="display:none">
+      <div style="font-weight:bold">
         Get in line at your favorite restaurant!
-      </p>
+      </div>
+      <div id="restaurantInfo">
+        <div id="restaurantName" style="font-weight:bold"></div>
+        <div id="restaurantAddress"></div>
+        <div id="restaurantPhone"></div>
+      </div>
       <button class="hero-btn" onclick="document.getElementById('id01').style.display='block'">Join The
-          Line!</button>
-      <div id="alrLine" class="blinking" style="display:inline; color:rgb(255, 129, 56); font-weight: bold;">You are already in line! </div>
+        Line!</button>
+      <div id="alrLine" class="blinking" style="display:inline; color:rgb(255, 129, 56); font-weight: bold;">You are
+        already in line! </div>
 
       <div id="seated" class="blinking" style=" color:rgb(255, 129, 56); font-weight: bold;">Your spot is ready!
         <button class="sign-btn" onclick="document.getElementById('seated').style.display='none'">Got It</button>
@@ -96,17 +116,22 @@
         </div>
 
         <div class="container">
-          <label for="uname" style="display:block"><b>Name</b></label>
-          <input type="text" placeholder="Enter Name" name="uname" required id="username">
+          <label for="uname" style="display:block"><b>First Name</b></label>
+          <input type="text" placeholder="Enter Name" name="uname" required id="username" class="heighttext">
+
+          <label for="uname" style="display:block"><b>Last Name</b></label>
+          <input type="text" placeholder="Enter Name" name="uname" required id="lastname" class="heighttext">
 
           <label for="partySize" style="display:block"><b>Party Size</b></label>
-          <input type="number" placeholder="Enter Party Size" name="partySize" min="1" max="20" step="1" required id="partySize">
+          <input type="number" placeholder="Enter Party Size" name="partySize" min="1" max="20" step="1" required
+            id="partySize" class="heighttext" style="width:6em">
 
           <label for="phoneNum" style="display:block"><b>Phone Number</b></label>
-          <input type="tel" placeholder="Enter Your Phone Number" name="phoneNum"  required id="phoneNum">
+          <input type="tel" placeholder="Enter Your Phone Number" name="phoneNum" required id="phoneNum"
+            class="heighttext">
 
 
-          <input type="submit" class="sign-btn"></input>
+          <input type="submit" name="submit" class="sign-btn"></input>
 
         </div>
       </form>
@@ -116,14 +141,14 @@
     <!--restaurant modal-->
     <div id="id02" class="modal2">
 
-      <div class="modal2-content animate" >
+      <div class="modal2-content animate">
         <div class="imgcontainer">
           <span onclick="document.getElementById('id02').style.display='none'" class="close"
             title="Close Modal">&times;</span>
         </div>
 
         <div class="container" id="restaurantModalContainer">
-          <label for="uname" style="display:block"><b>Name</b></label>
+          <label for="uname" style="display:block"><b>First Name</b></label>
           <div id="customerName"></div>
 
           <label for="partySize" style="display:block"><b>Party Size</b></label>
@@ -142,7 +167,7 @@
   </section>
 
   <!-----discover----->
-
+<!---
   <section class="discover">
     <h1>Discover</h1>
     <p>Restaurants that are supported by our platform</p>
@@ -168,8 +193,10 @@
     </div>
   </section>
 
-  <!---campus-->
+  --->
 
+  <!---campus-->
+<!----
   <section class="features">
     <h1>Features</h1>
     <p>Our platform provides lots of features that our competitors do not provide</p>
@@ -207,8 +234,9 @@
     </div>
   </section>
 
-
+-->
   <!-----Facilities-->
+  <!---
   <section class="vip">
     <h1>VIPs</h1>
     <p>Our first customers</p>
@@ -230,6 +258,7 @@
       </div>
     </div>
   </section>
+--->
 
   <script src="shared.js"></script>
   <script src="customer.js" defer></script>

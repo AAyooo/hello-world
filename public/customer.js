@@ -15,6 +15,8 @@ var party = document.getElementById("partySize").value;
 var phoneNum = document.getElementById("phoneNum").value;
 var randomTime;
 
+var topic;
+var restaurant;
 /// Sign in event handlers
 
 signInBtn.onclick = () => firebaseAuth.signInWithPopup(authProvider);
@@ -25,21 +27,31 @@ firebaseAuth.onAuthStateChanged(user => {
     if (user) {
         // signed in
         var query = restaurantCollection.where("EUID", "==", user.uid);
+        var RID;
         query.get().then((querySnapshot) => {
             restFlag = false;
             querySnapshot.forEach((doc) => {
                 console.log("EUID", "=>", doc.data());
+                restaurant = doc.data();
+                RID = restaurant.RID;
                 restFlag = true;
             });
             whenSignedIn.hidden = false;
             whenSignedOut.hidden = true;
             userDetails.innerHTML = `<h3 style="color:#ffff">Hello ${user.displayName}!</h3>`;
             if (restFlag) {
+                if(topic != undefined){
+                    mqtt.unsubscribe(topic);
+                }
+                topic = "cutsies/restaurant/" + RID;
+
                 document.getElementById("restaurantBox").style.display = "block";
                 document.getElementById("customerBox").style.display = "none";
                 document.getElementById("alrLine").style.display = "none";
                 document.getElementById('seated').style.display = "none";
                 document.getElementById("id02").style.display = "none";
+                peopleInLine();
+                updateQueue();
             }
         })
 
@@ -58,8 +70,27 @@ function customerLogin() {
     document.getElementById("customerBox").style.display = "block";
     document.getElementById('alrLine').style.display = 'none';
     document.getElementById('seated').style.display = "none";
-    mqtt.subscribe("cutises/restaurant1");
-    mqtt.subscribe("cutises/restaurant1/waitingtime");
+
+    var RID;
+    restaurantCollection.get().then((querySnapshot) => {
+        restFlag = false;
+        querySnapshot.forEach((doc) => {
+            console.log("EUID", "=>", doc.data());
+            restaurant = doc.data();
+            restFlag = true;
+            RID = restaurant.RID;
+
+            document.getElementById("restaurantInfo").style.display = "block";
+            document.getElementById('restaurantName').innerHTML = restaurant.Name;
+            document.getElementById('restaurantAddress').innerHTML = restaurant.BusinessAddress;
+            document.getElementById('restaurantPhone').innerHTML = restaurant.Phone;
+            if(topic != undefined){
+                mqtt.unsubscribe(topic);
+            }
+            topic = "cutsies/restaurant/" + RID;
+        });
+    });
+
 }
 function posReport(size) {
     if (size == 0) {
@@ -94,14 +125,18 @@ let unsubscribe;
 // Database Reference    
 function joinLine() {
 
+
+
     const { serverTimestamp } = firebase.firestore.FieldValue;
     var query = waitlistCollection.orderBy("createdAt").limit(100);
 
     username = document.getElementById("username").value;
+    lastname = document.getElementById("lastname").value;
+    username+=lastname;
     party = document.getElementById("partySize").value;
     phoneNum = document.getElementById("phoneNum").value;
 
-    if (username == "" || party == "" || phoneNum == "") {
+    if (username == "" || party == "" || phoneNum == "" || lastname == "") {
         return false;
     } else {
 
@@ -110,7 +145,7 @@ function joinLine() {
 
         query.get().then(querySnapshot => {
             querySnapshot.forEach((doc) => {
-                if (doc.get('name') == username && doc.get('phoneNumber') == phoneNum) {
+                if (doc.get('phoneNumber') == phoneNum || doc.get('name') == username) {
                     if (inLine == -1) { inLine = size; }
                 }
                 size++;
@@ -130,6 +165,10 @@ function joinLine() {
 
                     randomTime = Math.floor(Math.random() * (2) + 1) + size *2;
                     displayWaitingTime(randomTime);
+
+                    msg = new Paho.MQTT.Message("add," + username + "," + party + "," + phoneNum);
+                    msg.destinationName = topic;
+                    mqtt.send(msg);
                 });
             } else {
                 document.getElementById('id01').style.display = 'none';

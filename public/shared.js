@@ -6,6 +6,7 @@
  * Global Variables
  */
 var navLinks = document.getElementById("navLinks");//header menu links 
+var restFlag;
 
 //TODO: change for particular restaurant later
 let line = new Queue(); //the restaurant queue 
